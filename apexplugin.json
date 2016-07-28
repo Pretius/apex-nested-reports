@@ -1,0 +1,33 @@
+{
+  "name" : "Pretius APEX Nested reports",
+  "version" : "1.0",
+  "description" : "The plugin is dynamic action plugin imlementing nested reports within APEX classic reports. Scope of data, data appearance and behaviour is customizable within the plugin attributes.",
+  "keywords" : ["nested", "details", "table", "row"],
+  "homepage" : "https://github.com/Pretius/apex-nested-reports",
+  "bugs" : {
+    "url" : "https://github.com/Pretius/apex-nested-reports/issues",
+    "email" : "apex@pretius.com"
+  },
+  "license" : "MIT",
+  "author" : {
+    "name" : "Bartosz Ostrowski",
+    "email" : "bostrowski@pretius.com",
+    "url" : "http://pretius.com/technologies/oracle-apex/"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Pretius/apex-nested-reports.git"
+  },
+  "oracle" : {
+    "versions" : ["11.2.0.1", "12.1.0.1"],
+    "apex" : {
+      "versions" : ["5.0.0"],
+      "plugin" : {
+        "internalName" : "apex.nested.reports",
+        "type" : "dynamic action",
+        "demo" : "http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS",
+        "previewImage" : "https://raw.githubusercontent.com/Pretius/apex-nested-reports/master/preview.gif"
+      }
+    }
+  }
+}
