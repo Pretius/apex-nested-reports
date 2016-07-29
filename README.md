@@ -9,6 +9,9 @@ Author | Twitter | E-mail
 -------|---------|-------
 Bartosz Ostrowski | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com
 
+##Preview
+![Alt text](/preview.gif?raw=true "Preview")
+
 ##Pretius Plugins for Oracle APEX
 #### Item plugins
 * [Enhanced LOV item](http://apex.pretius.com/apex/f?p=105:ENHANCED_LOV_ITEM_APEX_ITEM)
