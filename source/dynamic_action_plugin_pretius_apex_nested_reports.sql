@@ -508,8 +508,10 @@ wwv_flow_api.create_plugin_attribute(
 ,p_prompt=>'Attach files'
 ,p_attribute_type=>'CHECKBOXES'
 ,p_is_required=>false
+,p_default_value=>'MUSTACHE'
 ,p_is_translatable=>false
 ,p_lov_type=>'STATIC'
+,p_help_text=>'File is required if your application does not include Mustache library.'
 );
 wwv_flow_api.create_plugin_attr_value(
  p_id=>wwv_flow_api.id(477327008267531073)
