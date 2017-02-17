@@ -379,45 +379,38 @@ wwv_flow_api.create_plugin(
 ')',
 'is',
 '',
-'  v_cursor sys_refcursor;',
+'  v_ref_cursor sys_refcursor;',
 '',
-'  l_cursor          pls_integer;',
-'  l_status          number;',
+'  l_cursor_id  pls_integer;',
+'  l_status number;',
 '',
 '  v_coll_row APEX_COLLECTIONs%ROWTYPE;',
 '  v_sql varchar2(4000);',
 'begin',
-'  --pobierz gotowe zapytanie z kolekcji',
+'  -- download ready query from the collection',
 '  select ',
 '    *',
 '  into',
 '    v_coll_row',
 '  from',
-'    APEX_COLLECTIONs',
+'    apex_collections',
 '  where',
 '    collection_name = p_dynamic_action.id||''_QUERY'';',
 '    -- There should be a single row in the collection now.',
-'    -- and (',
-'    --   c001 = apex_application.g_x01',
-'    --   and c002 = apex_application.g_x02',
-'    --   OR ',
-'    --   c001 is null',
-'    --   and c002 is null',
-'    -- ); ',
 '',
 '  v_sql := v_coll_row.c003;',
 '',
-'  -- open v_cursor for v_sql;',
-'  l_cursor := dbms_sql.open_cursor;',
-'  dbms_sql.parse (l_cursor, v_sql, dbms_sql.native);',
-'  -- bind all the values',
+'  l_cursor_id := dbms_sql.open_cursor;',
+'  dbms_sql.parse (l_cursor_id, v_sql, dbms_sql.native);',
+'  -- bind all variables in SQL',
 '  for i in 1 .. p_col_arr.count loop',
-'    dbms_sql.bind_variable (l_cursor, p_col_arr(i), p_val_arr(i));',
+'    dbms_sql.bind_variable (l_cursor_id, p_col_arr(i), p_val_arr(i));',
 '  end loop;',
-'  l_status := dbms_sql.execute(l_cursor);',
-'  v_cursor := dbms_sql.to_refcursor(l_cursor);',
+'  l_status := dbms_sql.execute(l_cursor_id);',
+'  -- convert to ref cursor for use with apex_json',
+'  v_ref_cursor := dbms_sql.to_refcursor(l_cursor_id);',
 '',
-'  apex_json.write( v_cursor );',
+'  apex_json.write( v_ref_cursor );',
 '',
 'end pretius_row_data_ajax;',
 '',
@@ -429,8 +422,8 @@ wwv_flow_api.create_plugin(
 ') return apex_plugin.t_dynamic_action_ajax_result',
 'is',
 '',
-'  v_columnNames  APEX_APPLICATION_GLOBAL.VC_ARR2;--varchar2(4000) := apex_application.g_x01;',
-'  v_columnValues APEX_APPLICATION_GLOBAL.VC_ARR2;--varchar2(4000) := apex_application.g_x02;',
+'  v_columnNames  APEX_APPLICATION_GLOBAL.VC_ARR2;',
+'  v_columnValues APEX_APPLICATION_GLOBAL.VC_ARR2;',
 '',
 '  v_result apex_plugin.t_dynamic_action_ajax_result;',
 '  v_sql varchar2(4000) := p_dynamic_action.attribute_01;',
@@ -456,13 +449,8 @@ wwv_flow_api.create_plugin(
 '  --apex_application.g_x03 = ''getHeaders''',
 '',
 '',
-'  -- Change columns to bind variables  ',
+'  -- Change columns to bind variables',
 '  for i in 1..v_columnNames.count loop',
-'    -- if REGEXP_LIKE (v_columnValues(i), ''^\d*$'') then',
-'    --   v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', v_columnValues(i) );  ',
-'    -- else',
-'    --   v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', chr(39)||v_columnValues(i)||chr(39) );',
-'    -- end if;',
 '',
 '    v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', '':'' || v_columnNames(i) );  ',
 '    ',
@@ -517,7 +505,7 @@ wwv_flow_api.create_plugin(
 '    htp.p(''AJAX ERROR: ''||SQLERRM );',
 '    return v_result;',
 'end pretius_row_details_ajax;',
-''))
+'    '))
 ,p_render_function=>'pretius_row_details'
 ,p_ajax_function=>'pretius_row_details_ajax'
 ,p_standard_attributes=>'REGION:JQUERY_SELECTOR:REQUIRED'
@@ -1042,9 +1030,6 @@ wwv_flow_api.create_plugin_attribute(
 ,p_lov_type=>'STATIC'
 ,p_help_text=>'Custom callback attribute allows you to add extra efects to rendered data.'
 );
-end;
-/
-begin
 wwv_flow_api.create_plugin_attr_value(
  p_id=>wwv_flow_api.id(981448909222750042)
 ,p_plugin_attribute_id=>wwv_flow_api.id(981444746868749097)
@@ -1053,6 +1038,9 @@ wwv_flow_api.create_plugin_attr_value(
 ,p_return_value=>'CR'
 ,p_help_text=>'If checked the result of the SQL query is retrieved only once for the specified table cell or jQuery selector.'
 );
+end;
+/
+begin
 wwv_flow_api.create_plugin_attr_value(
  p_id=>wwv_flow_api.id(981754433725322165)
 ,p_plugin_attribute_id=>wwv_flow_api.id(981444746868749097)
