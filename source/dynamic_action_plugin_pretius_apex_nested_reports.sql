@@ -13,10 +13,10 @@ whenever sqlerror exit sql.sqlcode rollback
 begin
 wwv_flow_api.import_begin (
  p_version_yyyy_mm_dd=>'2013.01.01'
-,p_release=>'5.0.1.00.06'
-,p_default_workspace_id=>10518555994626445
-,p_default_application_id=>105
-,p_default_owner=>'OSTROWB_SCHEMA'
+,p_release=>'5.0.3.00.03'
+,p_default_workspace_id=>1851245620250164
+,p_default_application_id=>108
+,p_default_owner=>'OBE'
 );
 end;
 /
@@ -28,7 +28,7 @@ end;
 prompt --application/shared_components/plugins/dynamic_action/pretius_apex_nested_reports
 begin
 wwv_flow_api.create_plugin(
- p_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(975412090517753424)
 ,p_plugin_type=>'DYNAMIC ACTION'
 ,p_name=>'PRETIUS_APEX_NESTED_REPORTS'
 ,p_display_name=>'Pretius APEX Nested Reports'
@@ -67,7 +67,7 @@ wwv_flow_api.create_plugin(
 '  v_result apex_plugin.t_dynamic_action_render_result;',
 '  v_region_id number;',
 '  v_region_type varchar2(100);',
-'  v_app_id number := :APP_ID;',
+'  v_app_id number := nv(''APP_ID'');',
 '  v_coll_name varchar2(200) := p_dynamic_action.id||''_COLUMNS'';',
 '  v_columns APEX_APPLICATION_GLOBAL.VC_ARR2;',
 '  v_column_array varchar2(4000);',
@@ -75,7 +75,7 @@ wwv_flow_api.create_plugin(
 '  v_queryErrors number := 0;',
 'BEGIN',
 '',
-'  v_result.ajax_identifier := APEX_PLUGIN.GET_AJAX_IDENTifIER();',
+'  v_result.ajax_identifier := APEX_PLUGIN.GET_AJAX_IDENTIFIER();',
 '  v_result.attribute_01 := p_dynamic_action.attribute_01;',
 '  v_result.attribute_02 := NVL(p_dynamic_action.attribute_02, '':'');',
 '  v_result.attribute_03 := NVL(p_dynamic_action.attribute_03, '':'');',
@@ -358,36 +358,62 @@ wwv_flow_api.create_plugin(
 '  return v_json;',
 'end getQueryDescJSON;',
 '',
-'procedure pretius_row_data_ajax (',
-'  p_dynamic_action IN apex_plugin.t_dynamic_action',
+'procedure split_columns_values(',
+'    p_col_str in varchar2',
+'  , p_val_str in varchar2',
+'  , p_col_arr in out nocopy apex_application_global.vc_arr2',
+'  , p_val_arr in out nocopy apex_application_global.vc_arr2',
+'  , p_delimeter in varchar2 default '':''',
 ')',
 'is',
-'  v_cursor sys_refcursor;',
+'begin',
+'  p_col_arr := apex_util.string_to_table( p_col_str, p_delimeter );',
+'  p_val_arr := apex_util.string_to_table( p_val_str, p_delimeter );',
+'end split_columns_values;',
+'',
+'',
+'procedure pretius_row_data_ajax (',
+'    p_dynamic_action IN apex_plugin.t_dynamic_action',
+'  , p_col_arr in out nocopy apex_application_global.vc_arr2',
+'  , p_val_arr in out nocopy apex_application_global.vc_arr2',
+')',
+'is',
+'',
+'  v_ref_cursor sys_refcursor;',
+'',
+'  l_cursor_id  pls_integer;',
+'  l_status number;',
+'',
 '  v_coll_row APEX_COLLECTIONs%ROWTYPE;',
 '  v_sql varchar2(4000);',
 'begin',
-'  --pobierz gotowe zapytanie z kolekcji',
+'  -- download ready query from the collection',
 '  select ',
 '    *',
 '  into',
 '    v_coll_row',
 '  from',
-'    APEX_COLLECTIONs',
+'    apex_collections',
 '  where',
-'    collection_name = p_dynamic_action.id||''_QUERY''',
-'    and (',
-'      c001 = apex_application.g_x01',
-'      and c002 = apex_application.g_x02',
-'      OR ',
-'      c001 is null',
-'      and c002 is null',
-'    ); ',
+'    collection_name = p_dynamic_action.id||''_QUERY'';',
+'    -- There should be a single row in the collection now.',
 '',
 '  v_sql := v_coll_row.c003;',
 '',
-'  open v_cursor for v_sql;',
-'  apex_json.write( v_cursor );  ',
-'end;',
+'  l_cursor_id := dbms_sql.open_cursor;',
+'  dbms_sql.parse (l_cursor_id, v_sql, dbms_sql.native);',
+'  -- bind all variables in SQL',
+'  for i in 1 .. p_col_arr.count loop',
+'    dbms_sql.bind_variable (l_cursor_id, p_col_arr(i), p_val_arr(i));',
+'  end loop;',
+'  l_status := dbms_sql.execute(l_cursor_id);',
+'  -- convert to ref cursor for use with apex_json',
+'  v_ref_cursor := dbms_sql.to_refcursor(l_cursor_id);',
+'',
+'  apex_json.write( v_ref_cursor );',
+'',
+'end pretius_row_data_ajax;',
+'',
 '',
 '',
 'function pretius_row_details_ajax (',
@@ -396,38 +422,37 @@ wwv_flow_api.create_plugin(
 ') return apex_plugin.t_dynamic_action_ajax_result',
 'is',
 '',
-'  v_columnNames  APEX_APPLICATION_GLOBAL.VC_ARR2;--varchar2(4000) := apex_application.g_x01;',
-'  v_columnValues APEX_APPLICATION_GLOBAL.VC_ARR2;--varchar2(4000) := apex_application.g_x02;',
+'  v_columnNames  APEX_APPLICATION_GLOBAL.VC_ARR2;',
+'  v_columnValues APEX_APPLICATION_GLOBAL.VC_ARR2;',
 '',
 '  v_result apex_plugin.t_dynamic_action_ajax_result;',
 '  v_sql varchar2(4000) := p_dynamic_action.attribute_01;',
 '  v_sql_result_json varchar2(4000);',
 '  v_parseResult varchar2(4000);',
-'  v_cursor sys_refcursor;',
 '',
 '  v_coll_name varchar2(200) := p_dynamic_action.id||''_QUERY'';',
 'begin',
 '  --$$$ zrobić obsługę, że jeśli w kolekcji jest juz wygenerowane query do wywyołania to zwraca to query',
 '  ',
+'  split_columns_values(',
+'      p_col_str => apex_application.g_x01',
+'    , p_val_str => apex_application.g_x02',
+'    , p_col_arr => v_columnNames',
+'    , p_val_arr => v_columnValues',
+'  );',
 '',
 '  if apex_application.g_x03 = ''getData'' then',
-'    pretius_row_data_ajax( p_dynamic_action );',
+'    pretius_row_data_ajax( p_dynamic_action, v_columnNames, v_columnValues);',
 '    return v_result;',
 '  end if;',
 '',
 '  --apex_application.g_x03 = ''getHeaders''',
 '',
 '',
-'  v_columnNames := APEX_UTIL.STRING_TO_TABLE( apex_application.g_x01 );',
-'  v_columnValues := APEX_UTIL.STRING_TO_TABLE( apex_application.g_x02 );',
-'',
-'  ',
+'  -- Change columns to bind variables',
 '  for i in 1..v_columnNames.count loop',
-'    if REGEXP_LIKE (v_columnValues(i), ''^\d*$'') then',
-'      v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', v_columnValues(i) );  ',
-'    else',
-'      v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', chr(39)||v_columnValues(i)||chr(39) );',
-'    end if;',
+'',
+'    v_sql := replace( v_sql, ''#''||v_columnNames(i)||''#'', '':'' || v_columnNames(i) );  ',
 '    ',
 '  end loop;',
 '',
@@ -450,6 +475,7 @@ wwv_flow_api.create_plugin(
 '      null;',
 '  end;',
 '',
+'  -- We don''t need g_x01, g_x02 any more. Remove g_x02?',
 '  APEX_COLLECTION.CREATE_COLLECTION( v_coll_name );',
 '  APEX_COLLECTION.ADD_MEMBER (',
 '    p_collection_name => v_coll_name,',
@@ -478,18 +504,21 @@ wwv_flow_api.create_plugin(
 '  WHEN OTHERS then',
 '    htp.p(''AJAX ERROR: ''||SQLERRM );',
 '    return v_result;',
-'end pretius_row_details_ajax;'))
+'end pretius_row_details_ajax;',
+'    '))
 ,p_render_function=>'pretius_row_details'
 ,p_ajax_function=>'pretius_row_details_ajax'
 ,p_standard_attributes=>'REGION:JQUERY_SELECTOR:REQUIRED'
 ,p_substitute_attributes=>true
 ,p_subscribe_plugin_settings=>true
-,p_version_identifier=>'1.0'
+,p_version_identifier=>'1.1'
+,p_about_url=>'https://github.com/Pretius/apex-nested-reports'
+,p_plugin_comment=>'v1.1 Implement bind variables for the subquery'
 ,p_files_version=>84
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(480494071342113002)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(504194333697513957)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'APPLICATION'
 ,p_attribute_sequence=>3
 ,p_display_sequence=>30
@@ -501,24 +530,24 @@ wwv_flow_api.create_plugin_attribute(
 ,p_lov_type=>'STATIC'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(480497350945115869)
-,p_plugin_attribute_id=>wwv_flow_api.id(480494071342113002)
+ p_id=>wwv_flow_api.id(504197613300516824)
+,p_plugin_attribute_id=>wwv_flow_api.id(504194333697513957)
 ,p_display_sequence=>10
 ,p_display_value=>'Yes'
 ,p_return_value=>'Y'
 ,p_help_text=>'Mustache library will be included.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(480497734439118861)
-,p_plugin_attribute_id=>wwv_flow_api.id(480494071342113002)
+ p_id=>wwv_flow_api.id(504197996794519816)
+,p_plugin_attribute_id=>wwv_flow_api.id(504194333697513957)
 ,p_display_sequence=>20
 ,p_display_value=>'No'
 ,p_return_value=>'N'
 ,p_help_text=>'Mustache library won''t be included. This library is essential for the plugin to work.'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(951713084265356899)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(975413346620757854)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>1
 ,p_display_sequence=>10
@@ -622,8 +651,8 @@ wwv_flow_api.create_plugin_attribute(
 '</p>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954321512766036634)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(978021775121437589)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>2
 ,p_display_sequence=>55
@@ -632,7 +661,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_is_required=>false
 ,p_default_value=>'CE:AA:LI:CR'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_lov_type=>'STATIC'
@@ -642,48 +671,48 @@ wwv_flow_api.create_plugin_attribute(
 '</p>'))
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(957847709943381650)
-,p_plugin_attribute_id=>wwv_flow_api.id(954321512766036634)
+ p_id=>wwv_flow_api.id(981547972298782605)
+,p_plugin_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_display_sequence=>5
 ,p_display_value=>'Cache results'
 ,p_return_value=>'CR'
 ,p_help_text=>'If checked the result of the SQL query is retrieved only once for the specified table cell or jQuery selector.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(954328078798044486)
-,p_plugin_attribute_id=>wwv_flow_api.id(954321512766036634)
+ p_id=>wwv_flow_api.id(978028341153445441)
+,p_plugin_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_display_sequence=>10
 ,p_display_value=>'Collapse expanded'
 ,p_return_value=>'CE'
 ,p_help_text=>'If checked every expanded row will be collapsed each time new row is presented.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(954369997588140361)
-,p_plugin_attribute_id=>wwv_flow_api.id(954321512766036634)
+ p_id=>wwv_flow_api.id(978070259943541316)
+,p_plugin_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_display_sequence=>20
 ,p_display_value=>'Set max height'
 ,p_return_value=>'SMH'
 ,p_help_text=>'If checked max-height property is added to expanded row. Value must be provided in Set max height attribute.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(954491742174506704)
-,p_plugin_attribute_id=>wwv_flow_api.id(954321512766036634)
+ p_id=>wwv_flow_api.id(978192004529907659)
+,p_plugin_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_display_sequence=>30
 ,p_display_value=>'Add animation'
 ,p_return_value=>'AA'
 ,p_help_text=>'If checked slideDown and slideUp animation is added while expanding / collapsing row.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(958049995449919867)
-,p_plugin_attribute_id=>wwv_flow_api.id(954321512766036634)
+ p_id=>wwv_flow_api.id(981750257805320822)
+,p_plugin_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_display_sequence=>40
 ,p_display_value=>'Loading indicator'
 ,p_return_value=>'LI'
 ,p_help_text=>'If checked the loading indicator is displayed whenever the ajax call occurs.'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(955169562604079485)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(978869824959480440)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>3
 ,p_display_sequence=>5
@@ -696,40 +725,40 @@ wwv_flow_api.create_plugin_attribute(
 ,p_help_text=>'Picked option defines the plugin customization level.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(955173441105080109)
-,p_plugin_attribute_id=>wwv_flow_api.id(955169562604079485)
+ p_id=>wwv_flow_api.id(978873703460481064)
+,p_plugin_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_display_sequence=>10
 ,p_display_value=>'Default template & default callback'
 ,p_return_value=>'DTDC'
 ,p_help_text=>'Default plugin behaviour. Resulting rows of data are rendered in default template (table of data) along with default callback settings.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(955173820646080951)
-,p_plugin_attribute_id=>wwv_flow_api.id(955169562604079485)
+ p_id=>wwv_flow_api.id(978874083001481906)
+,p_plugin_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_display_sequence=>20
 ,p_display_value=>'Default template & custom callback'
 ,p_return_value=>'DTCC'
 ,p_help_text=>'When this option is selected, resulting rows of data are rendered with template provided in custom template attribute.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(955174226159081581)
-,p_plugin_attribute_id=>wwv_flow_api.id(955169562604079485)
+ p_id=>wwv_flow_api.id(978874488514482536)
+,p_plugin_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_display_sequence=>30
 ,p_display_value=>'Custom template & default callback'
 ,p_return_value=>'CTDC'
 ,p_help_text=>'When this option is selected, resulting rows of data are rendered with default template and custom JS callback function defined in custom callback attribute.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(955174641411082424)
-,p_plugin_attribute_id=>wwv_flow_api.id(955169562604079485)
+ p_id=>wwv_flow_api.id(978874903766483379)
+,p_plugin_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_display_sequence=>40
 ,p_display_value=>'Custom template & custom callback'
 ,p_return_value=>'CTCC'
 ,p_help_text=>'When this option is selected, developer decides how template for resulting rows of data is build and how results should be displayed after receiving rows from database.'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954025250725538288)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977725513080939243)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>4
 ,p_display_sequence=>105
@@ -737,7 +766,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_attribute_type=>'TEXTAREA'
 ,p_is_required=>true
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'CTDC,CTCC'
 ,p_examples=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -855,8 +884,8 @@ wwv_flow_api.create_plugin_attribute(
 '</p>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954027117911541255)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977727380266942210)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>5
 ,p_display_sequence=>110
@@ -864,7 +893,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_attribute_type=>'TEXTAREA'
 ,p_is_required=>true
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTCC,CTCC'
 ,p_help_text=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -891,8 +920,8 @@ wwv_flow_api.create_plugin_attribute(
 '</dl>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954046402714633635)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977746665070034590)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>6
 ,p_display_sequence=>60
@@ -901,7 +930,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_is_required=>true
 ,p_default_value=>'#EBEBEB'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_help_text=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -912,8 +941,8 @@ wwv_flow_api.create_plugin_attribute(
 '</dl>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954050100641653243)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977750362997054198)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>7
 ,p_display_sequence=>100
@@ -923,7 +952,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_default_value=>'300'
 ,p_unit=>'px'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(954321512766036634)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978021775121437589)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'SMH'
 ,p_help_text=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -937,8 +966,8 @@ wwv_flow_api.create_plugin_attribute(
 '</dl>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954102614614598941)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977802876969999896)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>8
 ,p_display_sequence=>80
@@ -947,7 +976,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_is_required=>true
 ,p_default_value=>'#c5c5c5'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_help_text=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -961,8 +990,8 @@ wwv_flow_api.create_plugin_attribute(
 '</dl>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(954207705950095804)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(977907968305496759)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>9
 ,p_display_sequence=>90
@@ -971,7 +1000,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_is_required=>true
 ,p_default_value=>'#F2F2F2'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_help_text=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
@@ -985,8 +1014,8 @@ wwv_flow_api.create_plugin_attribute(
 '</dl>'))
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(957744484513348142)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(981444746868749097)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>10
 ,p_display_sequence=>55
@@ -995,15 +1024,15 @@ wwv_flow_api.create_plugin_attribute(
 ,p_is_required=>false
 ,p_default_value=>'CR:LI'
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'NOT_IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_lov_type=>'STATIC'
 ,p_help_text=>'Custom callback attribute allows you to add extra efects to rendered data.'
 );
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(957748646867349087)
-,p_plugin_attribute_id=>wwv_flow_api.id(957744484513348142)
+ p_id=>wwv_flow_api.id(981448909222750042)
+,p_plugin_attribute_id=>wwv_flow_api.id(981444746868749097)
 ,p_display_sequence=>10
 ,p_display_value=>'Cache results'
 ,p_return_value=>'CR'
@@ -1013,16 +1042,16 @@ end;
 /
 begin
 wwv_flow_api.create_plugin_attr_value(
- p_id=>wwv_flow_api.id(958054171369921210)
-,p_plugin_attribute_id=>wwv_flow_api.id(957744484513348142)
+ p_id=>wwv_flow_api.id(981754433725322165)
+,p_plugin_attribute_id=>wwv_flow_api.id(981444746868749097)
 ,p_display_sequence=>20
 ,p_display_value=>'Loading indicator'
 ,p_return_value=>'LI'
 ,p_help_text=>'If checked the loading indicator is displayed whenever the ajax call occurs.'
 );
 wwv_flow_api.create_plugin_attribute(
- p_id=>wwv_flow_api.id(957880154273411251)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(981580416628812206)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_attribute_scope=>'COMPONENT'
 ,p_attribute_sequence=>11
 ,p_display_sequence=>50
@@ -1032,7 +1061,7 @@ wwv_flow_api.create_plugin_attribute(
 ,p_default_value=>'No data found'
 ,p_max_length=>4000
 ,p_is_translatable=>false
-,p_depending_on_attribute_id=>wwv_flow_api.id(955169562604079485)
+,p_depending_on_attribute_id=>wwv_flow_api.id(978869824959480440)
 ,p_depending_on_condition_type=>'IN_LIST'
 ,p_depending_on_expression=>'DTDC,CTDC'
 ,p_help_text=>'Enter text or HTML to be displayed when details query returns 0 rows.'
@@ -1068,8 +1097,8 @@ end;
 /
 begin
 wwv_flow_api.create_plugin_file(
- p_id=>wwv_flow_api.id(320345843590101105)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(344046105945502060)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_file_name=>'pretius_row_details_styles.css'
 ,p_mime_type=>'text/css'
 ,p_file_charset=>'utf-8'
@@ -1328,8 +1357,8 @@ end;
 /
 begin
 wwv_flow_api.create_plugin_file(
- p_id=>wwv_flow_api.id(320348577031107539)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(344048839386508494)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_file_name=>'pretius_row_details.js'
 ,p_mime_type=>'application/javascript'
 ,p_file_charset=>'utf-8'
@@ -1440,8 +1469,8 @@ end;
 /
 begin
 wwv_flow_api.create_plugin_file(
- p_id=>wwv_flow_api.id(952349528187599286)
-,p_plugin_id=>wwv_flow_api.id(951711828162352469)
+ p_id=>wwv_flow_api.id(976049790543000241)
+,p_plugin_id=>wwv_flow_api.id(975412090517753424)
 ,p_file_name=>'mustache.js'
 ,p_mime_type=>'application/javascript'
 ,p_file_charset=>'utf-8'
