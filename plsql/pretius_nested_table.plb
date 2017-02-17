@@ -322,11 +322,32 @@ begin
   return v_json;
 end getQueryDescJSON;
 
-procedure pretius_row_data_ajax (
-  p_dynamic_action IN apex_plugin.t_dynamic_action
+procedure split_columns_values(
+    p_col_str in varchar2
+  , p_val_str in varchar2
+  , p_col_arr in out nocopy apex_application_global.vc_arr2
+  , p_val_arr in out nocopy apex_application_global.vc_arr2
+  , p_delimeter in varchar2 default ':'
 )
 is
+begin
+  p_col_arr := apex_util.string_to_table( p_col_str, p_delimeter );
+  p_val_arr := apex_util.string_to_table( p_val_str, p_delimeter );
+end split_columns_values;
+
+
+procedure pretius_row_data_ajax (
+    p_dynamic_action IN apex_plugin.t_dynamic_action
+  , p_col_arr in out nocopy apex_application_global.vc_arr2
+  , p_val_arr in out nocopy apex_application_global.vc_arr2
+)
+is
+
   v_cursor sys_refcursor;
+
+  l_cursor          pls_integer;
+  l_status          number;
+
   v_coll_row APEX_COLLECTIONs%ROWTYPE;
   v_sql varchar2(4000);
 begin
@@ -338,20 +359,32 @@ begin
   from
     APEX_COLLECTIONs
   where
-    collection_name = p_dynamic_action.id||'_QUERY'
-    and (
-      c001 = apex_application.g_x01
-      and c002 = apex_application.g_x02
-      OR 
-      c001 is null
-      and c002 is null
-    ); 
+    collection_name = p_dynamic_action.id||'_QUERY';
+    -- There should be a single row in the collection now.
+    -- and (
+    --   c001 = apex_application.g_x01
+    --   and c002 = apex_application.g_x02
+    --   OR 
+    --   c001 is null
+    --   and c002 is null
+    -- ); 
 
   v_sql := v_coll_row.c003;
 
-  open v_cursor for v_sql;
-  apex_json.write( v_cursor );  
-end;
+  -- open v_cursor for v_sql;
+  l_cursor := dbms_sql.open_cursor;
+  dbms_sql.parse (l_cursor, v_sql, dbms_sql.native);
+  -- bind all the values
+  for i in 1 .. p_col_arr.count loop
+    dbms_sql.bind_variable (l_cursor, p_col_arr(i), p_val_arr(i));
+  end loop;
+  l_status := dbms_sql.execute(l_cursor);
+  v_cursor := dbms_sql.to_refcursor(l_cursor);
+
+  apex_json.write( v_cursor );
+
+end pretius_row_data_ajax;
+
 
 
 function pretius_row_details_ajax (
@@ -367,31 +400,35 @@ is
   v_sql varchar2(4000) := p_dynamic_action.attribute_01;
   v_sql_result_json varchar2(4000);
   v_parseResult varchar2(4000);
-  v_cursor sys_refcursor;
 
   v_coll_name varchar2(200) := p_dynamic_action.id||'_QUERY';
 begin
   --$$$ zrobić obsługę, że jeśli w kolekcji jest juz wygenerowane query do wywyołania to zwraca to query
   
+  split_columns_values(
+      p_col_str => apex_application.g_x01
+    , p_val_str => apex_application.g_x02
+    , p_col_arr => v_columnNames
+    , p_val_arr => v_columnValues
+  );
 
   if apex_application.g_x03 = 'getData' then
-    pretius_row_data_ajax( p_dynamic_action );
+    pretius_row_data_ajax( p_dynamic_action, v_columnNames, v_columnValues);
     return v_result;
   end if;
 
   --apex_application.g_x03 = 'getHeaders'
 
 
-  v_columnNames := APEX_UTIL.STRING_TO_TABLE( apex_application.g_x01 );
-  v_columnValues := APEX_UTIL.STRING_TO_TABLE( apex_application.g_x02 );
-
-  
+  -- Change columns to bind variables  
   for i in 1..v_columnNames.count loop
-    if REGEXP_LIKE (v_columnValues(i), '^\d*$') then
-      v_sql := replace( v_sql, '#'||v_columnNames(i)||'#', v_columnValues(i) );  
-    else
-      v_sql := replace( v_sql, '#'||v_columnNames(i)||'#', chr(39)||v_columnValues(i)||chr(39) );
-    end if;
+    -- if REGEXP_LIKE (v_columnValues(i), '^\d*$') then
+    --   v_sql := replace( v_sql, '#'||v_columnNames(i)||'#', v_columnValues(i) );  
+    -- else
+    --   v_sql := replace( v_sql, '#'||v_columnNames(i)||'#', chr(39)||v_columnValues(i)||chr(39) );
+    -- end if;
+
+    v_sql := replace( v_sql, '#'||v_columnNames(i)||'#', ':' || v_columnNames(i) );  
     
   end loop;
 
@@ -414,6 +451,7 @@ begin
       null;
   end;
 
+  -- We don't need g_x01, g_x02 any more. Remove g_x02?
   APEX_COLLECTION.CREATE_COLLECTION( v_coll_name );
   APEX_COLLECTION.ADD_MEMBER (
     p_collection_name => v_coll_name,
