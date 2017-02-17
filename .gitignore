@@ -1,0 +1,8 @@
+# Folders
+.DS_Store
+bin
+node_modules
+
+# Logs
+logs
+*.log
