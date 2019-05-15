@@ -27,14 +27,57 @@ Live demo, instructions and more details about the plugin are available directly
 ## Install
 
 ### Installation package
+1. Install package `PRETIUS_APEX_NESTED_REPORTS.sql` - the plugin package specification
+1. Install package `PRETIUS_APEX_NESTED_REPORTS.plb` - the plugin package body
+1. `dynamic_action_plugin_pretius_apex_nested_reports.sql` - the plugin installation files for Oracle APEX 5.1 or higher
+
 
 ### Install procedure
+To successfully install/update the plugin follow those steps:
+1. Install package `PRETIUS_APEX_NESTED_REPORTS` in Oracle APEX Schema
+1. Install the plugin file `dynamic_action_plugin_pretius_apex_nested_reports.sql` using Oracle APEX plugin import wizard
+1. Configure application level componenets
+
+## Usage guide
+Example nested report is based on `emp` and `dept` table. 
+1. Create new application
+1. Create new page
+1. Create `Classic Report` based on SQL query `*` 
+1. Create derivied column and configure it as follows:
+   1. Change derivied column `Type` to `Link`
+   1. Set `Target` to `URL` and set
+   1. Set `URL` to `<span class="fa fa-search"></span><span class="DEPTNO" style="display: none">#DEPTNO#</span>`
+   1. Set `Link Attributes` to `class="dept"`
+1. Create new dynamic action and configure it as follows:
+   1. Set `Event` to `Click`
+   1. Set `Selection Type` to `jQuery Selector`
+   1. Set `Event Scope` to `Dynamic`
+   1. Set `Static Container (jQuery Selector)` to `body`
+1. Create true action and configure it as follows:
+   1. Set `Action` to `Pretius APEX Nested Reports [Plug-In]`
+   1. Set `Details query` to `**` 
+   1. Set `Affected Elements > Selection Type` to `Report`
+   1. Set `Affected Elements > Region` to `Classic Report` defined in step 3.
+   1. (Not required) Adjust the plugin behaviour up to your needs using the plugin attributes
+1. Save and run page
+
+`* SQL Query for step 3`
+```sql
+select * from dept
+```
+`** SQL Query for step 6.ii`
+```sql 
+select * from emp where deptno = '#DEPTNO#'
+````
 
 ## Plugin Settings
+Detailed information about how to use every attribute of the plugin is presented in built-in help texts in APEX Application Builder.
 
 ### Component Settings
+TBD
 
 ### Plugin Events
+TBD
 
 ## Authors
 Author | Twitter | E-mail
