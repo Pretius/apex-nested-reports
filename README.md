@@ -73,11 +73,10 @@ select * from emp where deptno = '#DEPTNO#'
 ## Plugin Settings
 Detailed information about how to use every attribute of the plugin is presented in built-in help texts in APEX Application Builder.
 
-### Component Settings
-TBD
-
 ### Plugin Events
-TBD
+Whenever the plugin shows, hides or refreshes nested report it triggers `Default Callback [Pretius APEX Nested Reports]` event. The event can be bound with dynamic actions on `document` (`Selection Type set` to `Javascript Expression` = `document`) to listen all nested reports events. Or the event can be bound to particular report (`Selection Type` set to `Region`) to listen only specific report events.
+
+
 
 ## Authors
 Author | Twitter | E-mail
