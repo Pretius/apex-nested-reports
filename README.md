@@ -4,6 +4,38 @@ The plugin is dynamic action plugin implementing nested reports within APEX Clas
 
 Live demo, instructions and more details about the plugin are available directly in [demo application](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS).
 
+## Preview
+![Alt text](/preview.gif?raw=true "Preview")
+
+## Demo Application
+[http://http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS)
+
+## Features at Glance
+* Compatible with Classic report, Interactive report and any HTML based table
+* Nested report is defined as SQL query
+* Nested report data can be limited with value from parent report
+* Nesting levels is unlimited
+* Data can be rendered with default template (table based) or with custom template (Mustache library)
+* Default callback and Default template can be highly customized
+
+## Roadmap
+* Default template:
+  * filtering data via columns
+  * sorting data via columns (db side)
+  * number of rows
+
+## Install
+
+### Installation package
+
+### Install procedure
+
+## Plugin Settings
+
+### Component Settings
+
+### Plugin Events
+
 ## Authors
 Author | Twitter | E-mail
 -------|---------|-------
@@ -13,9 +45,6 @@ Bartosz Ostrowski | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@p
 Address: Przy Parku 2/2; 02-384 Warsaw, Poland  
 Website: [http://www.pretius.com](http://www.pretius.com)  
 e-mail: [office@pretius.com](mailto:office@pretius.com)  
-
-## Preview
-![Alt text](/preview.gif?raw=true "Preview")
 
 ## Pretius Plugins for Oracle APEX
 #### Item plugins
