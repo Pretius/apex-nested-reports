@@ -1,3 +1,15 @@
+- [Pretius APEX Nested Reports](#pretius-apex-nested-reports)
+  - [Oracle APEX dynamic action plugin v2.0](#oracle-apex-dynamic-action-plugin-v20)
+- [License](#license)
+- [Preview](#preview)
+- [Demo Application](#demo-application)
+- [Features at Glance](#features-at-glance)
+- [Roadmap](#roadmap)
+- [Install](#install)
+  - [Installation package](#installation-package)
+  - [Install procedure](#install-procedure)
+- [Usage guide](#usage-guide)
+
 # Pretius APEX Nested Reports
 ##### Oracle APEX dynamic action plugin v2.0
 The plugin is dynamic action plugin implementing nested reports within APEX Classic Reports, Interactive Reports and static HTML tables. Scope of data, data appearance and behavior is customizable with the plugin attributes.
