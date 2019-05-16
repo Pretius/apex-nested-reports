@@ -74,9 +74,57 @@ select * from emp where deptno = '#DEPTNO#'
 Detailed information about how to use every attribute of the plugin is presented in built-in help texts in APEX Application Builder.
 
 ### Plugin Events
-Whenever the plugin shows, hides or refreshes nested report it triggers `Default Callback [Pretius APEX Nested Reports]` event. The event can be bound with dynamic actions on `document` (`Selection Type set` to `Javascript Expression` = `document`) to listen all nested reports events. Or the event can be bound to particular report (`Selection Type` set to `Region`) to listen only specific report events.
+The plugin exposes one event that can be listened on `document` or on particular report.
 
+* Default callback [pretius_default_callback] - triggered each time nested report is being shown or hidden. `this.data` is extended with additional information described below.
 
+```javascript
+{
+  "isCollapsing"     : Boolean, // When true the nested report is collapsing
+  "isCollapsed"      : Boolean, // When true the nested report is collapsed.
+  "isExpanding"      : Boolean, // When true the nested report is expanding
+  "isExpanded"       : Boolean, // When true the nested report is expanded.
+  "animationRunning" : Boolean, // When true the nested report is the middle of animation (expanding or collapsing).
+  "afterRefresh"     : Boolean, // When true the nested report is rendered after forced refresh.
+  "report"           : jQuery Object,  // object reference to parent report (1 level higher report)
+  "triggeringTd"     : jQuery Object,  // object reference to the cell from which nested report was performed.
+  "triggeringElement": jQuery Object,  // object reference to the element that was bound in dynamic action (eg. Selection Type = jQuery Selector)
+  "nestedReportRow"  : jQuery Object,  // object reference to newly crated tr element that stores rendered nested reaport
+  "nestedReportData" : Object          // object with retrievied data from data base  
+  "parent"           : {
+    "type"    : String,         //When 'nested' the parent element of nested report is instance of the plugin. When 'affectedElement' the parent element of nested report is native APEX component such as Classic Report or Interactive report.
+    "element" : jQuery Object,  //Reference to parent element of the nested report (instance of the plugin or native APEX report)
+    "level"   : Number          //Describes the level of nested report. First level starts with 1.    
+  }
+}
+```
+
+### Manual events
+Default callback supports 4 predefined actions (refresh, expand all, collapse, collapse all) that can be executed using anchors with proper classes. Those actions works only when anchors with given class are embeded in `Extend default template` or `Custom template` using `Default Callback` for particular nested report.
+
+#### Refresh nested report
+Action forces current nested report to be refreshed.
+```html
+<a href="javascript: void(0)" class="nestedreport--refresh">Refresh</a>
+```
+
+#### Collapse nested report
+Action forces current nested report to be collapsed.
+```html
+<a href="javascript: void(0)" class="nestedreport--slideup">Slide up</a>
+```
+
+#### Expand all nested reports
+Action forces all next level nested report to expand.
+```html
+<a href="javascript: void(0)" class="nestedreport--expandAll">Expand all</a>
+```
+
+#### Collapse all expanded nested reports
+Action forces all next level expanded nested report to collapse.
+```html
+<a href="javascript: void(0)" class="nestedreport--slideup">Collapse all expanded</a>
+```
 
 ## Authors
 Author | Twitter | E-mail
