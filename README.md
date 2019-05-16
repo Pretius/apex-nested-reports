@@ -2,8 +2,6 @@
 ##### Oracle APEX dynamic action plugin v2.0
 The plugin is dynamic action plugin implementing nested reports within APEX Classic Reports, Interactive Reports and static HTML tables. Scope of data, data appearance and behavior is customizable with the plugin attributes.
 
-Live demo, instructions and more details about the plugin are available directly in [demo application](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS).
-
 ## Preview
 ![Alt text](/preview.gif?raw=true "Preview")
 
@@ -144,10 +142,6 @@ Pretius Sp. z o.o. Sp. K.
 Address | Website | E-mail
 --------|---------|-------
 Przy Parku 2/2 Warsaw 02-384, Poland | [http://www.pretius.com](http://www.pretius.com) | [office@pretius.com](mailto:office@pretius.com)
-
-Address: Przy Parku 2/2; 02-384 Warsaw, Poland  
-Website: [http://www.pretius.com](http://www.pretius.com)  
-e-mail: [office@pretius.com](mailto:office@pretius.com)
 
 ## Pretius Plugins for Oracle APEX
 #### Item plugins
