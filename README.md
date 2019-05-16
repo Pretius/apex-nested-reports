@@ -133,15 +133,21 @@ Action forces all next level expanded nested report to collapse.
 
 ![Alt text](/preview_collapse_all.gif?raw=true "Manual collapse all")
 
-## Authors
+## About Author
 Author | Twitter | E-mail
 -------|---------|-------
 Bartosz Ostrowski | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com
 
-**Pretius Sp. z o.o. Sp. K.**  
+## About Pretius
+Pretius Sp. z o.o. Sp. K.
+
+Address | Website | E-mail
+--------|---------|-------
+Przy Parku 2/2 Warsaw 02-384, Poland | [http://www.pretius.com](http://www.pretius.com) | [office@pretius.com](mailto:office@pretius.com)
+
 Address: Przy Parku 2/2; 02-384 Warsaw, Poland  
 Website: [http://www.pretius.com](http://www.pretius.com)  
-e-mail: [office@pretius.com](mailto:office@pretius.com)  
+e-mail: [office@pretius.com](mailto:office@pretius.com)
 
 ## Pretius Plugins for Oracle APEX
 #### Item plugins
