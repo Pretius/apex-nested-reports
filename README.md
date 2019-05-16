@@ -1,3 +1,4 @@
+# Table of Contents
 - [Pretius APEX Nested Reports](#pretius-apex-nested-reports)
   - [Oracle APEX dynamic action plugin v2.0](#oracle-apex-dynamic-action-plugin-v20)
 - [License](#license)
@@ -9,6 +10,15 @@
   - [Installation package](#installation-package)
   - [Install procedure](#install-procedure)
 - [Usage guide](#usage-guide)
+- [Plugin Settings](#plugin-settings)
+  - [Plugin Events](#plugin-events)
+  - [Manual events](#manual-events)
+    - [Refresh nested report](#refresh-nested-report)
+    - [Collapse nested report](#collapse-nested-report)
+    - [Expand all nested reports](#expand-all-nested-reports)
+    - [Collapse all expanded nested reports](#collapse-all-expanded-nested-reports)
+- [About Author](#about-author)
+- [About Pretius](#about-pretius)
 
 # Pretius APEX Nested Reports
 ##### Oracle APEX dynamic action plugin v2.0
