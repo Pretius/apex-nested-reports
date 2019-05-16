@@ -107,7 +107,9 @@ Action forces current nested report to be refreshed.
 ```html
 <a href="javascript: void(0)" class="nestedreport--refresh">Refresh</a>
 ```
+<details><summary>See example gif</summary>
 ![Alt text](/preview_refresh.gif?raw=true "Manual refresh")
+</details>
 
 #### Collapse nested report
 Action forces current nested report to be collapsed.
