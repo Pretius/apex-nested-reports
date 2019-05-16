@@ -2,6 +2,9 @@
 ##### Oracle APEX dynamic action plugin v2.0
 The plugin is dynamic action plugin implementing nested reports within APEX Classic Reports, Interactive Reports and static HTML tables. Scope of data, data appearance and behavior is customizable with the plugin attributes.
 
+## License
+MIT
+
 ## Preview
 ![Alt text](/preview.gif?raw=true "Preview")
 
