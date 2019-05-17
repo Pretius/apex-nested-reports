@@ -162,13 +162,13 @@ Action forces all next level expanded nested report to collapse.
 
 ## Changelog
 
-## 2.0.1
+## 2.0.2
 - `PL/SQL` fix to multiple columns value placeholders by @darshanputtaswamy https://github.com/Pretius/apex-nested-reports/issues/16
 - `PL/SQL` fix to `ORA-06502: PL/SQL: numeric or value error` by @rimblas https://github.com/Pretius/apex-nested-reports/issues/7
 - `JS` jQuery `size` method removed in favor for `length` property - compatibility for APEX 18+
 
 
-## 2.0.0
+## 2.0.0 / 2.0.1
 - `JS` Highlighting nested reports no longer embeds CSS rules within DOM as <style></style> tag
 - `JS` Default callback supports special events that can be triggered using anchor with special classes (refresh, expand all, collapse, collapse all)
 - `JS` The plugin triggers event on collapsing and expanding nested report
