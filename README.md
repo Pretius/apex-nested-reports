@@ -21,6 +21,7 @@ The plugin is dynamic action plugin implementing nested reports within APEX Clas
     - [Collapse all expanded nested reports](#collapse-all-expanded-nested-reports)
 - [About Author](#about-author)
 - [About Pretius](#about-pretius)
+- [Change log](#changelog)
 
 ## License
 MIT
