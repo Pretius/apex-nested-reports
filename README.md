@@ -128,7 +128,7 @@ Action forces current nested report to be refreshed.
 ```html
 <a href="javascript: void(0)" class="nestedreport--refresh">Refresh</a>
 ```
-![Alt text](/preview_refresh.gif?raw=true "Manual refresh")
+![Alt text](images/preview_refresh.gif?raw=true "Manual refresh")
 
 #### Collapse nested report
 Action forces current nested report to be collapsed.
@@ -136,7 +136,7 @@ Action forces current nested report to be collapsed.
 <a href="javascript: void(0)" class="nestedreport--slideup">Slide up</a>
 ```
 
-![Alt text](/preview_collapse.gif?raw=true "Manual collapse")
+![Alt text](images/preview_collapse.gif?raw=true "Manual collapse")
 
 #### Expand all nested reports
 Action forces all next level nested report to expand.
@@ -144,7 +144,7 @@ Action forces all next level nested report to expand.
 <a href="javascript: void(0)" class="nestedreport--expandAll">Expand all</a>
 ```
 
-![Alt text](/preview_expand_all.gif?raw=true "Manual expand all")
+![Alt text](images/preview_expand_all.gif?raw=true "Manual expand all")
 
 #### Collapse all expanded nested reports
 Action forces all next level expanded nested report to collapse.
@@ -152,7 +152,7 @@ Action forces all next level expanded nested report to collapse.
 <a href="javascript: void(0)" class="nestedreport--slideup">Collapse all expanded</a>
 ```
 
-![Alt text](/preview_collapse_all.gif?raw=true "Manual collapse all")
+![Alt text](images/preview_collapse_all.gif?raw=true "Manual collapse all")
 
 ## About Author
 Author | Twitter | E-mail
