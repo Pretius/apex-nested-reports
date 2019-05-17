@@ -51,7 +51,7 @@ wwv_flow_api.create_plugin(
 '  Twitter: <code>@bostrowsk1</code><br/>',
 '  Plugin home page: <code>http://apex.pretius.com/apex/f?p=PLUGINS:NESTED_REPORTS</code>',
 '</p>'))
-,p_version_identifier=>'2.0.1'
+,p_version_identifier=>'2.0.2'
 ,p_about_url=>'http://apex.pretius.com/apex/f?p=PLUGINS:NESTED_REPORTS'
 ,p_files_version=>319
 );
