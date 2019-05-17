@@ -195,9 +195,9 @@ Action forces all next level expanded nested report to collapse.
 - Initial release
 
 ## About Author
-Author | Twitter | E-mail
--------|---------|-------
-Bartosz Ostrowski | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com
+Author | Github | Twitter | E-mail
+-------|--------|---------|-------
+Bartosz Ostrowski | [@bostrowski](https://github.com/bostrowski) | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com
 
 ## About Pretius
 Pretius Sp. z o.o. Sp. K.
