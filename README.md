@@ -156,6 +156,40 @@ Action forces all next level expanded nested report to collapse.
 
 ![Alt text](images/preview_collapse_all.gif?raw=true "Manual collapse all")
 
+## Changelog
+
+## 2.0.1
+- `PL/SQL` fix to multiple columns value placeholders by @darshanputtaswamy https://github.com/Pretius/apex-nested-reports/issues/16
+- `PL/SQL` fix to `ORA-06502: PL/SQL: numeric or value error` by @rimblas https://github.com/Pretius/apex-nested-reports/issues/7
+- `JS` jQuery `size` method removed in favor for `length` property - compatibility for APEX 18+
+
+
+## 2.0.0
+- `JS` Highlighting nested reports no longer embeds CSS rules within DOM as <style></style> tag
+- `JS` Default callback supports special events that can be triggered using anchor with special classes (refresh, expand all, collapse, collapse all)
+- `JS` The plugin triggers event on collapsing and expanding nested report
+- `JS` The plugin can be bound with "dialog close" event to refresh nested report after closing modal page
+- `JS` The plugin no longer supports TR tag as triggering element
+- `JS` HTML within nested report is fully supported
+- `JS` Nested report can be bound to any HTML table (the plugin is not limited to Classic or Interactive Report)
+- `PL/SQL` "#COLUMN_VALUE#" marker should be surrounded with apostrophes to avoid APEX query compilation error. When value is number, apostrophes are removed by the plugin automatically.
+- `PL/SQL` Nested report uses DBMS_SQL.BIND_VARIABLES to bind values from GUI (APEX items included)
+- `PL/SQL` The plugin supports special column aliases in nested report to create headings without content or font-awesome icon as heading
+- `PL/SQL` The plugin supports SQL comments within nested report query
+- `Plugin` Interactive Report is supported
+- `Plugin` The plugin no longer checks compatibility between nested report and parent report. Setting the plugin is easier and only requires existing span tag with proper class and value marker
+- `Plugin` The plugin supports embedding nested report within nested reports (the number of nested reports is not limited by the plugin)
+- `Plugin` The plugin configuration errors are now displayed as nested report with error and hint (not only in console)
+- `Plugin` The plugin javascript and PL/SQL code was written from very beginning.
+- `Plugin attributes` New styles of "Default callback" loading indicator (align to report, align to cell, embed in cell, replace cell content).
+- `Plugin attributes` Data rendered in "Default template" can be sorted by end-user. Javascript sorting function uses column type (varchar2 or number)
+- `Plugin attributes` New plugin attribute for extending "Default template" HTML with preceding and following HTML.
+- `Plugin attributes` Default template supports stretching
+- `Plugin attributes` Animation duration for expanding and collapsing nested report can be specified in „Plugin component settings”
+
+## 1.0.0
+- Initial release
+
 ## About Author
 Author | Twitter | E-mail
 -------|---------|-------
