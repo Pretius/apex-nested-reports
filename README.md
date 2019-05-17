@@ -40,10 +40,13 @@ MIT
 * Default callback and Default template can be highly customized
 
 ## Roadmap
-* Default template:
+* [] Default template:
   * filtering data via columns
   * sorting data via columns (db side)
   * number of rows
+* [x] Plugin events on collapsing and expanding row (default callback)
+* [x] Support for Interactive report 
+* [x] More attributes to customize
 
 ## Install
 
