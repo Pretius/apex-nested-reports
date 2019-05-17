@@ -94,6 +94,8 @@ select * from emp where deptno = '#DEPTNO#'
 ## Plugin Settings
 Detailed information about how to use every attribute of the plugin is presented in built-in help texts in APEX Application Builder.
 
+![Alt text](images/preview_helptext.gif?raw=true "Oracle APEX application builder help text for the plguin")
+
 ### Plugin Events
 The plugin exposes one event that can be listened on `document` or on particular report.
 
