@@ -29,7 +29,7 @@ The plugin is dynamic action plugin implementing nested reports within APEX Clas
 MIT
 
 ## Demo Application
-[http://http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS)
+[http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS)
 
 ## Features at Glance
 * Compatible with Classic report, Interactive report and any HTML based table
