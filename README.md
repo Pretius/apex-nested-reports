@@ -22,6 +22,7 @@ The plugin is dynamic action plugin implementing nested reports within APEX Clas
     - [Expand all nested reports](#expand-all-nested-reports)
     - [Collapse all expanded nested reports](#collapse-all-expanded-nested-reports)
 - [Change log](#changelog)
+- [Known issues](#known-issues)
 - [About Author](#about-author)
 - [About Pretius](#about-pretius)
 
@@ -194,6 +195,9 @@ Action forces all next level expanded nested report to collapse.
 
 ## 1.0.0
 - Initial release
+
+## Known issues
+* Column alias can't contain period - https://github.com/Pretius/apex-nested-reports/issues/13
 
 ## About Author
 Author | Github | Twitter | E-mail
