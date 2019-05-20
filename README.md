@@ -40,6 +40,7 @@ MIT
 * Default callback and Default template can be highly customized
 
 ## Roadmap
+* "No data found" attribute should be translatable
 * [ ] Default template:
   * filtering data via columns
   * sorting data via columns (db side)
