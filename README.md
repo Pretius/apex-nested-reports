@@ -200,9 +200,9 @@ Action forces all next level expanded nested report to collapse.
 * Column alias can't contain period - https://github.com/Pretius/apex-nested-reports/issues/13
 
 ## About Author
-Author | Github | Twitter | E-mail
--------|--------|---------|-------
-Bartosz Ostrowski | [@bostrowski](https://github.com/bostrowski) | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com
+Author            | Website                                 | Github                                       | Twitter                                       | E-mail
+------------------|-----------------------------------------|----------------------------------------------|-----------------------------------------------|----------------------------------------------------
+Bartosz Ostrowski | [http://ostrowskibartosz.pl](https://www.ostrowskibartosz.pl) | [@bostrowski](https://github.com/bostrowski) | [@bostrowsk1](https://twitter.com/bostrowsk1) | bostrowski@pretius.com, ostrowski.bartosz@gmail.com
 
 ## About Pretius
 Pretius Sp. z o.o. Sp. K.
