@@ -25,6 +25,12 @@ The plugin is dynamic action plugin implementing nested reports within APEX Clas
 - [Known issues](#known-issues)
 - [About Author](#about-author)
 - [About Pretius](#about-pretius)
+- [Free support](#free-support)
+  - [Bug reporting and change requests](#bug-reporting-and-change-requests)
+  - [Implementation issues](#implementation-issues)
+- [Become a contributor](#become-a-contributor)
+- [Comercial support](#comercial-support)
+
 
 ## License
 MIT
@@ -211,17 +217,34 @@ Address | Website | E-mail
 --------|---------|-------
 Przy Parku 2/2 Warsaw 02-384, Poland | [http://www.pretius.com](http://www.pretius.com) | [office@pretius.com](mailto:office@pretius.com)
 
-## Support
-Our plugins are free to use but in some cases you might need to contact us. We are willing to assist you but in certain circumstances you will be charged for our time spent on helping you. Please keep in mind we do our best to keep documentation up to date and we won't answer question for which there is explaination in documentation (at github and as help text in application builder).
+## Free support
+Pretius provides free support for the plugins at the GitHub platform. 
+We monitor raised issues, prepare fixes, and answer your questions. However, please note that we deliver the plug-ins free of charge, and therefore we will not always be able to help you immediately. 
 
-All request (bug fix / change request) should be posted in Issues Tab at github repository.
+Interested in better support? 
+* [Become a contributor!](#become-a-contributor) We always prioritize the issues raised by our contributors and fix them for free.
+* [Consider comercial support.](#comercial-support) Options and benefits are described in the chapter below.
 
-### Free support
-We do support the plugin in certain cases such as bug fixing and change request. If you have faced issue that might be bug please check Issues tab in github repository. In case you won't be able to find related issue please raise the issue following these rules:
 
-* issue should contain login credentials to application at apex.oracle.com where issue is reproduced
-* issue should contain steps to reproduce the issue in demo application
-* issue should contain description about it's nature
+### Bug reporting and change requests
+Have you found a bug or have an idea of additional features that the plugin could cover? Firstly, please check the Roadmap and Known issues sections. If your case is not on the lists, please open an issue on a GitHub page following these rules:
+* issue should contain login credentials to the application at apex.oracle.com where the problem is reproduced;
+* issue should include steps to reproduce the case in the demo application;
+* issue should contain description about its nature.
 
-### Paid support
-In case you are not able to implement the plugin or you are willing to have custom implementation based on the plugin attributes (ie. custom JavaScript callbacks) we are willing to help you. Please send inquiry to apex[at]pretius.com with description what you want us to help you with. We will contact you as soon as possible with pricing and possible dates.
+### Implementation issues
+If you encounter a problem during the plug-in implementation, please check out our demo application. We do our best to describe each possible use case precisely. If you can not find a solution or your problem is different, contact us: apex-plugins@pretius.com.
+
+## Become a contributor!
+We consider our plugins as genuine open source products, and we encourage you to become a contributor. Help us improve plugins by fixing bugs and developing extra features. Comment one of the opened issues or register a new one, to let others know what you are working on. When you finish, create a new pull request. We will review your code and add the changes to the repository.
+
+By contributing to this repository, you help to build a strong APEX community. We will prioritize any issues raised by you in this and any other plugins.
+
+## Comercial support
+We are happy to share our experience for free, but we also realize that sometimes response time, quick implementation, SLA, and instant release for the latest version are crucial. That’s why if you need extended support for our plug-ins, please contact us at apex-plugins@pretius.com.
+We offer:
+* enterprise-level assistance;
+* support in plug-ins implementation and utilization;
+* dedicated contact channel to our developers;
+* SLA at the level your organization require;
+* priority update to next APEX releases and features listed in the roadmap.
