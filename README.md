@@ -1,42 +1,32 @@
-# Pretius APEX Nested Reports
-##### Oracle APEX dynamic action plugin v2.0.2
+# Pretius Nested Reports
+
+Oracle APEX dynamic action plugin v2.0.2
 The plugin is dynamic action plugin implementing nested reports within APEX Classic Reports, Interactive Reports and static HTML tables. Scope of data, data appearance and behavior is customizable with the plugin attributes.
 
-## Preview
-![Alt text](/preview.gif?raw=true "Preview")
-
 ## Table of Contents
+- [Preview](#preview)
 - [License](#license)
-- [Demo Application](#demo-application)
-- [Features at Glance](#features-at-glance)
+- [Features at glance](#features-at-glance)
 - [Roadmap](#roadmap)
-- [Install](#install)
+- [Installation](#installation)
   - [Installation package](#installation-package)
-  - [Install procedure](#install-procedure)
-- [Usage guide](#usage-guide)
-- [Plugin Settings](#plugin-settings)
-  - [Plugin Events](#plugin-events)
-  - [Manual events](#manual-events)
-    - [Refresh nested report](#refresh-nested-report)
-    - [Collapse nested report](#collapse-nested-report)
-    - [Expand all nested reports](#expand-all-nested-reports)
-    - [Collapse all expanded nested reports](#collapse-all-expanded-nested-reports)
-- [Change log](#changelog)
-- [Known issues](#known-issues)
-- [About Author](#about-author)
-- [About Pretius](#about-pretius)
+  - [Installation procedure](#installation-procedure)
+- [Usage guide & Demo application](#usage-guide-demo-application)
 - [Free support](#free-support)
   - [Bug reporting and change requests](#bug-reporting-and-change-requests)
   - [Implementation issues](#implementation-issues)
 - [Become a contributor](#become-a-contributor)
 - [Comercial support](#comercial-support)
+- [Changelog](#changelog)
+- [Known issues](#known-issues)
+- [About Author](#about-author)
+- [About Pretius](#about-pretius)
 
+## Preview
+![Alt text](images/preview.gif?raw=true "Preview")
 
 ## License
 MIT
-
-## Demo Application
-[http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS)
 
 ## Features at Glance
 * Compatible with Classic report, Interactive report and any HTML based table
@@ -56,21 +46,21 @@ MIT
 * [x] Support for Interactive report 
 * [x] More attributes to customize
 
-## Install
+## Installation
 
 ### Installation package
 1. `src/PRETIUS_APEX_NESTED_REPORTS.sql` - the plugin package specification
 1. `src/PRETIUS_APEX_NESTED_REPORTS.plb` - the plugin package body
 1. `src/dynamic_action_plugin_pretius_apex_nested_reports.sql` - the plugin installation files for Oracle APEX 5.1 or higher
 
-
-### Install procedure
+### Installation procedure
 To successfully install/update the plugin follow those steps:
 1. Install package `PRETIUS_APEX_NESTED_REPORTS` in Oracle APEX Schema owner (ie. via SQL Workshop)
 1. Install the plugin file `dynamic_action_plugin_pretius_apex_nested_reports.sql` using Oracle APEX plugin import wizard
 1. Configure application level componenets of the plugin
 
-## Usage guide
+## Usage guide & Demo application
+### Basic usage
 Example nested report is based on `emp` and `dept` table. 
 1. Create new application
 1. Create new page
@@ -87,7 +77,7 @@ Example nested report is based on `emp` and `dept` table.
    1. Set `Event Scope` to `Dynamic`
    1. Set `Static Container (jQuery Selector)` to `body`
 1. Create true action and configure it as follows:
-   1. Set `Action` to `Pretius APEX Nested Reports [Plug-In]`
+   1. Set `Action` to `Pretius Nested Reports [Plug-In]`
    1. Set `Details query` to `**` 
    1. Set `Affected Elements > Selection Type` to `Report`
    1. Set `Affected Elements > Region` to `Classic Report` defined in step 3.
@@ -102,71 +92,40 @@ select * from dept
 ```sql 
 select * from emp where deptno = '#DEPTNO#'
 ````
+### Demo application
+Check different plugin configurations and use cases in our  [Live Demo](http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS)
 
-## Plugin Settings
-Detailed information about how to use every attribute of the plugin is presented in built-in help texts in APEX Application Builder.
+## Free support
+Pretius provides free support for the plugins at the GitHub platform. 
+We monitor raised issues, prepare fixes, and answer your questions. However, please note that we deliver the plug-ins free of charge, and therefore we will not always be able to help you immediately. 
 
-![Alt text](images/preview_helptext.gif?raw=true "Oracle APEX application builder help text for the plguin")
+Interested in better support? 
+* [Become a contributor!](#become-a-contributor) We always prioritize the issues raised by our contributors and fix them for free.
+* [Consider comercial support.](#comercial-support) Options and benefits are described in the chapter below.
 
-### Plugin Events
-The plugin exposes one event that can be listened on `document` or on particular report.
+### Bug reporting and change requests
+Have you found a bug or have an idea of additional features that the plugin could cover? Firstly, please check the Roadmap and Known issues sections. If your case is not on the lists, please open an issue on a GitHub page following these rules:
+* issue should contain login credentials to the application at apex.oracle.com where the problem is reproduced;
+* issue should include steps to reproduce the case in the demo application;
+* issue should contain description about its nature.
 
-* Default callback [pretius_default_callback] - triggered each time nested report is being shown or hidden. `this.data` is extended with additional information described below.
+### Implementation issues
+If you encounter a problem during the plug-in implementation, please check out our demo application. We do our best to describe each possible use case precisely. If you can not find a solution or your problem is different, contact us: apex-plugins@pretius.com.
 
-```javascript
-{
-  "isCollapsing"     : Boolean, // When true the nested report is collapsing
-  "isCollapsed"      : Boolean, // When true the nested report is collapsed.
-  "isExpanding"      : Boolean, // When true the nested report is expanding
-  "isExpanded"       : Boolean, // When true the nested report is expanded.
-  "animationRunning" : Boolean, // When true the nested report is the middle of animation (expanding or collapsing).
-  "afterRefresh"     : Boolean, // When true the nested report is rendered after forced refresh.
-  "report"           : jQuery Object,  // object reference to parent report (1 level higher report)
-  "triggeringTd"     : jQuery Object,  // object reference to the cell from which nested report was performed.
-  "triggeringElement": jQuery Object,  // object reference to the element that was bound in dynamic action (eg. Selection Type = jQuery Selector)
-  "nestedReportRow"  : jQuery Object,  // object reference to newly crated tr element that stores rendered nested reaport
-  "nestedReportData" : Object          // object with retrievied data from data base  
-  "parent"           : {
-    "type"    : String,         //When 'nested' the parent element of nested report is instance of the plugin. When 'affectedElement' the parent element of nested report is native APEX component such as Classic Report or Interactive report.
-    "element" : jQuery Object,  //Reference to parent element of the nested report (instance of the plugin or native APEX report)
-    "level"   : Number          //Describes the level of nested report. First level starts with 1.    
-  }
-}
-```
+## Become a contributor!
+We consider our plugins as genuine open source products, and we encourage you to become a contributor. Help us improve plugins by fixing bugs and developing extra features. Comment one of the opened issues or register a new one, to let others know what you are working on. When you finish, create a new pull request. We will review your code and add the changes to the repository.
 
-### Manual events
-Default callback supports 4 predefined actions (refresh, expand all, collapse, collapse all) that can be executed using anchors with proper classes. Those actions works only when anchors with given class are embeded in `Extend default template` or `Custom template` using `Default Callback` for particular nested report.
+By contributing to this repository, you help to build a strong APEX community. We will prioritize any issues raised by you in this and any other plugins.
 
-#### Refresh nested report
-Action forces current nested report to be refreshed.
-```html
-<a href="javascript: void(0)" class="nestedreport--refresh">Refresh</a>
-```
-![Alt text](images/preview_refresh.gif?raw=true "Manual refresh")
+## Comercial support
+We are happy to share our experience for free, but we also realize that sometimes response time, quick implementation, SLA, and instant release for the latest version are crucial. That’s why if you need extended support for our plug-ins, please contact us at apex-plugins@pretius.com.
+We offer:
+* enterprise-level assistance;
+* support in plug-ins implementation and utilization;
+* dedicated contact channel to our developers;
+* SLA at the level your organization require;
+* priority update to next APEX releases and features listed in the roadmap.
 
-#### Collapse nested report
-Action forces current nested report to be collapsed.
-```html
-<a href="javascript: void(0)" class="nestedreport--slideup">Slide up</a>
-```
-
-![Alt text](images/preview_collapse.gif?raw=true "Manual collapse")
-
-#### Expand all nested reports
-Action forces all next level nested report to expand.
-```html
-<a href="javascript: void(0)" class="nestedreport--expandAll">Expand all</a>
-```
-
-![Alt text](images/preview_expand_all.gif?raw=true "Manual expand all")
-
-#### Collapse all expanded nested reports
-Action forces all next level expanded nested report to collapse.
-```html
-<a href="javascript: void(0)" class="nestedreport--slideup">Collapse all expanded</a>
-```
-
-![Alt text](images/preview_collapse_all.gif?raw=true "Manual collapse all")
 
 ## Changelog
 
@@ -213,38 +172,14 @@ Bartosz Ostrowski | [http://ostrowskibartosz.pl](https://www.ostrowskibartosz.pl
 ## About Pretius
 Pretius Sp. z o.o. Sp. K.
 
+Pretius is a software company specialized in Java-based and low-code applications, with a dedicated team of over 25 Oracle APEX developers.
+Members of our APEX team are technical experts, have excellent communication skills, and work directly with end-users / business owners of the software. Some of them are also well-known APEX community members, winners of APEX competitions, and speakers at international conferences.
+We are the authors of the translate-apex.com project and some of the best APEX plug-ins available at the apex.world.
+We are located in Poland, but working globally. If you need the APEX support, contact us right now.
+
 Address | Website | E-mail
 --------|---------|-------
-Przy Parku 2/2 Warsaw 02-384, Poland | [http://www.pretius.com](http://www.pretius.com) | [office@pretius.com](mailto:office@pretius.com)
-
-## Free support
-Pretius provides free support for the plugins at the GitHub platform. 
-We monitor raised issues, prepare fixes, and answer your questions. However, please note that we deliver the plug-ins free of charge, and therefore we will not always be able to help you immediately. 
-
-Interested in better support? 
-* [Become a contributor!](#become-a-contributor) We always prioritize the issues raised by our contributors and fix them for free.
-* [Consider comercial support.](#comercial-support) Options and benefits are described in the chapter below.
+Żwirki i Wigury 16A, 02-092 Warsaw, Poland | [http://www.pretius.com](http://www.pretius.com) | [office@pretius.com](mailto:office@pretius.com)
 
 
-### Bug reporting and change requests
-Have you found a bug or have an idea of additional features that the plugin could cover? Firstly, please check the Roadmap and Known issues sections. If your case is not on the lists, please open an issue on a GitHub page following these rules:
-* issue should contain login credentials to the application at apex.oracle.com where the problem is reproduced;
-* issue should include steps to reproduce the case in the demo application;
-* issue should contain description about its nature.
 
-### Implementation issues
-If you encounter a problem during the plug-in implementation, please check out our demo application. We do our best to describe each possible use case precisely. If you can not find a solution or your problem is different, contact us: apex-plugins@pretius.com.
-
-## Become a contributor!
-We consider our plugins as genuine open source products, and we encourage you to become a contributor. Help us improve plugins by fixing bugs and developing extra features. Comment one of the opened issues or register a new one, to let others know what you are working on. When you finish, create a new pull request. We will review your code and add the changes to the repository.
-
-By contributing to this repository, you help to build a strong APEX community. We will prioritize any issues raised by you in this and any other plugins.
-
-## Comercial support
-We are happy to share our experience for free, but we also realize that sometimes response time, quick implementation, SLA, and instant release for the latest version are crucial. That’s why if you need extended support for our plug-ins, please contact us at apex-plugins@pretius.com.
-We offer:
-* enterprise-level assistance;
-* support in plug-ins implementation and utilization;
-* dedicated contact channel to our developers;
-* SLA at the level your organization require;
-* priority update to next APEX releases and features listed in the roadmap.

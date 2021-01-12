@@ -1,0 +1,123 @@
+
+td > .rowDetailsContainer {
+  display: none;
+  padding: 10px;
+}
+
+td > .rowDetailsContainer > .overflow {
+  overflow: auto;
+}
+
+/*
+div.rowDetailsContainer table {
+  background-color: red;
+}
+*/
+
+.pretius--ajaxIndicator.floatRight {
+  float:right;
+  opacity: 0.5;
+}
+
+.pretius--ajaxIndicator.content {
+  /*text-align:center;*/
+  opacity: 0.5;
+}
+
+div.pretius--error {
+  text-align:center;
+}
+
+.pretius--reason {
+
+}
+
+.pretius--reason .fa {
+  font-size: 30px;
+  line-height: 40px;
+  display: block;
+  opacity: 0.7;
+}
+
+.pretius--errorTitle {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.pretius--techError pre,
+.pretius--errorAddInfo {
+  margin: 0px;
+  line-height: 30px;
+  font-size:14px;
+}
+
+.pretius--techError pre {
+  line-height: 16px;
+  text-align:left;
+  background-color: rgba(255,255,255, 0.4);
+  border: 1px dashed rgba(0,0,0,0.3);
+  padding: 2px 10px;
+}   
+
+div.rowDetailsContainer .u-Report-sort.sort--asc .icon-rpt-sort-asc {
+  display: inline-block;
+}
+
+div.rowDetailsContainer .u-Report-sort.sort--desc .icon-rpt-sort-desc {
+  display: inline-block;
+}
+
+div.rowDetailsContainer .u-Report-sortIcon {
+  display: none;
+}
+
+.t-Report-report div.rowDetailsContainer .t-Report-report.pretius--strechReport,
+.a-IRR-table div.rowDetailsContainer .t-Report-report.pretius--strechReport,
+.t-Report-report.pretius--strechReport {
+  width: 100%;
+}
+
+.t-Report-report div.rowDetailsContainer .t-Report-report {
+  width: auto;
+}
+
+/* Default template / border color */
+div.rowDetailsContainer td.t-Report-cell:last-child:not(.pretius--expanded),
+div.rowDetailsContainer th.t-Report-colHead:last-child,
+div.rowDetailsContainer td.t-Report-cell:not(.pretius--expanded),
+div.rowDetailsContainer th.t-Report-colHead {
+  /*border-color: rgba(0,0,0, 0.1) !important;*/
+  border-color: #dcdcdc;
+}
+
+/* Default template / odd row cells background */
+tr.pretius--hover div.rowDetailsContainer table.t-Report-report > tbody > tr.odd td.t-Report-cell:not(.pretius--expanded),
+                  div.rowDetailsContainer table.t-Report-report > tbody > tr.odd td.t-Report-cell:not(.pretius--expanded) {
+  /*background-color: rgba(255, 255, 255, 0.3) !important;*/
+  background-color: #f7f7f7 !important; 
+}
+/* Default template / even row cells background */
+tr.pretius--hover div.rowDetailsContainer table.t-Report-report > tbody > tr.even td.t-Report-cell:not(.pretius--expanded),
+                  div.rowDetailsContainer table.t-Report-report > tbody > tr.even td.t-Report-cell:not(.pretius--expanded) {
+  /*background-color: rgba(255, 255, 255, 0.6) !important;*/
+  background-color: #fcfcfc !important;
+}
+
+/* Default template / highlight cell color */
+tr.pretius--hover div.rowDetailsContainer table.t-Report-report > tbody > tr.odd:hover  td.t-Report-cell:not(.pretius--expanded),
+tr.pretius--hover div.rowDetailsContainer table.t-Report-report > tbody > tr.even:hover td.t-Report-cell:not(.pretius--expanded) {
+  /*background-color: rgba(255, 255, 255, 0.8) !important;*/
+  background-color: #f0f0f0 !important;
+}
+
+/* Default template / heading background color */
+div.rowDetailsContainer th.t-Report-colHead {
+  /*background-color: rgba(255, 255, 255, 0.8);*/
+  background-color: #fff !important;
+}
+
+/* IR */
+.a-IRR-table div.rowDetailsContainer  tr td:first-child, 
+.a-IRR-table div.rowDetailsContainer  tr th:first-child {
+  border-left-width: 1px;
+}
