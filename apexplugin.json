@@ -41,7 +41,7 @@
         "internalName" : "apex.nested.reports",
         "type" : "dynamic action",
         "demo" : "http://apex.pretius.com/apex/f?p=105:NESTED_REPORTS",
-        "previewImage" : "https://raw.githubusercontent.com/Pretius/apex-nested-reports/master/preview.gif"
+        "previewImage" : "https://raw.githubusercontent.com/Pretius/apex-nested-reports/master/images/preview.gif"
       }
     }
   }
