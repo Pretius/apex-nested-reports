@@ -68,7 +68,8 @@ Example nested report is based on `emp` and `dept` table.
 1. Create derivied column and configure it as follows:
    1. Change derivied column `Type` to `Link`
    1. Set `Target` to `URL`
-   1. Set `URL` to `<span class="fa fa-search"></span><span class="DEPTNO" style="display: none">#DEPTNO#</span>`
+   1. Set `URL` to `javascript: void(0);` and click `OK`
+   1. Set `Link Text` to `<span class="fa fa-search"></span><span class="DEPTNO" style="display: none">#DEPTNO#</span>`
    1. Set `Link Attributes` to `class="dept"`
 1. Create new dynamic action and configure it as follows:
    1. Set `Event` to `Click`
@@ -79,7 +80,7 @@ Example nested report is based on `emp` and `dept` table.
 1. Create true action and configure it as follows:
    1. Set `Action` to `Pretius Nested Reports [Plug-In]`
    1. Set `Details query` to `**` 
-   1. Set `Affected Elements > Selection Type` to `Report`
+   1. Set `Affected Elements > Selection Type` to `Region`
    1. Set `Affected Elements > Region` to `Classic Report` defined in step 3.
    1. (Not required) Adjust the plugin behaviour up to your needs using the plugin attributes
 1. Save and run page
