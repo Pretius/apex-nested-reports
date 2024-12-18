@@ -51,12 +51,12 @@ MIT
 ### Installation package
 1. `src/PRETIUS_APEX_NESTED_REPORTS.sql` - the plugin package specification
 1. `src/PRETIUS_APEX_NESTED_REPORTS.plb` - the plugin package body
-1. `src/dynamic_action_plugin_pretius_apex_nested_reports.sql` - the plugin installation files for Oracle APEX 5.1 or higher
+1. `plugin_install.sql` - the plugin installation files for Oracle APEX 5.1 or higher
 
 ### Installation procedure
 To successfully install/update the plugin follow those steps:
 1. Install package `PRETIUS_APEX_NESTED_REPORTS` in Oracle APEX Schema owner (ie. via SQL Workshop)
-1. Install the plugin file `dynamic_action_plugin_pretius_apex_nested_reports.sql` using Oracle APEX plugin import wizard
+1. Install the plugin file `plugin_install.sql` using Oracle APEX plugin import wizard
 1. Configure application level componenets of the plugin
 
 ## Usage guide & Demo application
